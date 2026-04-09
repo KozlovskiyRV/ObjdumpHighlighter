@@ -1,0 +1,53 @@
+{
+	"name": "objdump-highlighter",
+	"displayName": "Objdump Highlighter",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.60.0"
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"contributes": {
+		"languages": [
+			{
+				"id": "objdump",
+				"aliases": [
+					"Objdump Listing",
+					"objdump"
+				],
+				"extensions": [
+					".lst",
+					".list",
+					".objdump",
+					".disasm"
+				]
+			}
+		],
+		"grammars": [
+			{
+				"language": "objdump",
+				"scopeName": "source.objdump",
+				"path": "./syntaxes/objdump.tmLanguage.json"
+			}
+		],
+		"configurationDefaults": {
+			"[objdump]": {
+				"editor.tabSize": 8,
+				"editor.insertSpaces": false,
+				"editor.detectIndentation": false,
+	            "editor.colorDecorators": false
+			},
+			"editor.tokenColorCustomizations": {
+				"textMateRules": [
+					{
+						"scope": "constant.name.instruction.objdump",
+						"settings": {
+							"fontStyle": "bold"
+						}
+					}
+				]
+			}
+		}
+	}
+}
