@@ -1,0 +1,158 @@
+{
+	"name": "Objdump Highlighter",
+	"scopeName": "source.objdump",
+	"patterns": [
+    	{
+			"comment": "Секция Sections:",
+			"begin": "^(Sections):$",
+			"end": "(?=^\\s*[^\\d\\r\\n]+:$)",
+			"beginCaptures": { "1": { "name": "markup.bold.section.objdump" } },
+			"patterns": [
+				{
+					"comment": "Заголовок таблицы секций",
+					"match": "^Idx.*Algn$",
+					"name": "comment.section.objdump"
+				},
+				{
+					"comment": "Строка таблицы секций, кроме флагов секций",
+					"match": "^\\s*(\\d+)\\s*([.\\w]+)\\s*([a-fA-F0-9]+)\\s*([a-fA-F0-9]+)\\s*([a-fA-F0-9]+)\\s*([a-fA-F0-9]+)\\s*(.*)",
+					"captures": {
+						"1": { "name": "entity.name.tag.section.objdump" },
+						"2": { "name": "entity.name.type.class.section.objdump" },
+						"3": { "name": "constant.numeric.section.objdump" },
+						"4": { "name": "constant.numeric.section.objdump" },
+						"5": { "name": "constant.numeric.section.objdump" },
+						"6": { "name": "constant.numeric.section.objdump" },
+						"7": { "name": "variable.property.section.objdump" }
+					}
+				},
+				{
+					"comment": "Строка таблицы с флагами секций",
+					"match": "\\b(CONTENTS|ALLOC|READONLY|LOAD|CONTENT|DATA|CODE)\\b",
+					"captures": {
+						"1": { "name": "constant.language.section.objdump" }
+					}
+				}
+			]
+		},
+    	{
+			"comment": "Секция SYMBOL TABLE:",
+			"begin": "^(SYMBOL TABLE):$",
+			"end": "(?=^\\s*[^\\d\\r\\n]+:$)",
+			"beginCaptures": { "1": { "name": "markup.bold.section.objdump" } },
+			"patterns": [
+				{
+					"comment": "Строка таблицы символов",
+					"match": "^\\s*([a-fA-F0-9]+)\\s*(\\w*)\\s*(\\w*)\\s*((?:.|\\*)[\\w.\\*]*)\\s*([a-fA-F0-9]+)\\s*([\\w.]*)\\s*$",
+					"captures": {
+						"1": { "name": "constant.numeric.section.objdump" },
+						"2": { "name": "constant.language.section.objdump" },
+						"3": { "name": "constant.language.section.objdump" },
+						"4": { "name": "entity.name.type.class.section.objdump" },
+						"5": { "name": "constant.numeric.section.objdump" },
+						"6": { "name": "entity.name.function.section.objdump" }
+					}
+				}
+			]
+		},
+		{
+			"comment": "Сырое содержимое секций",
+			"begin":"^(Contents of section )([\\w.]*):$",
+			"end": "(?=^\\s*[^\\d\\r\\n]+:$)",
+			"beginCaptures": {
+				"1": { "name": "markup.bold.section.objdump" },
+				"2": { "name": "entity.name.type.class.section.objdump" }
+			},
+			"patterns": [
+				{
+					"comment": "Строка сырого содержимого секции: первое число - адрес, остальные - содержимое",
+					"match": "^\\s*([a-fA-F0-9]+)\\s*([a-fA-F0-9]+)?\\s*([a-fA-F0-9]+)?\\s*([a-fA-F0-9]+)?\\s*([a-fA-F0-9]+)?\\s*(.*)$",
+					"captures": {
+						"1": { "name": "constant.numeric.section.objdump" },
+						"2": { "name": "constant.language.section.objdump" },
+						"3": { "name": "constant.language.section.objdump" },
+						"4": { "name": "constant.language.section.objdump" },
+						"5": { "name": "constant.language.section.objdump" },
+						"6": { "name": "string.section.objdump" }
+					}
+				}
+			]
+		},
+		{
+			"comment": "Интерпретированное содержимое секций",
+			"begin":"^(Disassembly of section )([\\w.]*):$",
+			"end": "(?=^\\s*[^\\d\\r\\n]+:$)",
+			"beginCaptures": {
+				"1": { "name": "markup.bold.section.objdump" },
+				"2": { "name": "entity.name.type.class.section.objdump" }
+			},
+			"patterns": [
+				{
+					"comment": "Метка адреса типа 08000000 <_isr_vector>:",
+					"match": "^\\s*([a-fA-F0-9]+)\\s*(<)(.*)(>):\\s*$",
+					"captures": {
+						"1": { "name": "constant.numeric.section.objdump" },
+						"2": { "name": "string.section.objdump" },
+						"3": { "name": "entity.name.function.section.objdump" },
+						"4": { "name": "string.section.objdump" }
+					}
+				},
+				{
+					"comment": "Часть строки, содержащая адрес инструкции, код команды, мнемоническое имя (оставшаяся часть всех строк обрабатывается скопом ниже)",
+					"match": "^\\s*([a-fA-F0-9]+):\\s*([a-fA-F0-9]{4,8})\\s?([a-fA-F0-9]{4})?\\s*([\\w+.]*)\\s*",
+					"captures": {
+						"1": { "name": "constant.numeric.section.objdump" },
+						"2": { "name": "constant.language.section.objdump" },
+						"3": { "name": "constant.language.section.objdump" },
+						"4": { "name": "keyword.control.section.objdump" }
+					}
+				},
+				{
+					"comment": "Все регистры процессора",
+					"match": "(r[\\d]+|lr|pc|sp|psr)",
+					"captures": {
+						"1": { "name": "variable.property.section.objdump" }
+					}
+				},
+				{
+					"comment": "Все комментарии",
+					"match": "(;.*)$",
+					"captures": {
+						"1": { "name": "comment.section.objdump" }
+					}
+				},
+				{
+					"comment": "Все неправильные строки",
+					"match": "^\\s*([a-fA-F0-9]+):\\s*(.*)\\s*$",
+					"captures": {
+						"1": { "name": "constant.numeric.section.objdump" },
+						"2": { "name": "constant.character.section.objdump" }
+					}
+				},
+				{
+					"comment": "Все числа",
+					"match": "(#-?\\d+|[a-fA-F0-9]+)",
+					"captures": {
+						"1": { "name": "constant.numeric.section.objdump" }
+					}
+				},
+				{
+					"comment": "Все метки адресов",
+					"match": "(<)(.*)(>)",
+					"captures": {
+						"1": { "name": "string.section.objdump" },
+						"2": { "name": "entity.name.function.section.objdump" },
+						"3": { "name": "string.section.objdump" }
+					}
+				}
+			]
+		},
+		{
+			"comment": "Названия остальных секций",
+			"match": "^\\s*([^\\d\\r\\n]+):$",
+			"captures": {
+				"1": { "name": "markup.bold.section.objdump" }
+			}
+		}
+	]
+}
