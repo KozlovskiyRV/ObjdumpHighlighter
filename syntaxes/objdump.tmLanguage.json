@@ -5,7 +5,7 @@
     	{
 			"comment": "Секция Sections:",
 			"begin": "^(Sections):$",
-			"end": "(?=^\\s*[^\\d\\r\\n]+:$)",
+			"end": "(?=^\\s*[a-zA-Z].*:$)",
 			"beginCaptures": { "1": { "name": "markup.bold.section.objdump" } },
 			"patterns": [
 				{
@@ -28,7 +28,7 @@
 				},
 				{
 					"comment": "Строка таблицы с флагами секций",
-					"match": "\\b(CONTENTS|ALLOC|READONLY|LOAD|CONTENT|DATA|CODE)\\b",
+					"match": "\\b(CONTENTS|ALLOC|READONLY|LOAD|CONTENT|DATA|CODE|RELOC)\\b",
 					"captures": {
 						"1": { "name": "constant.language.section.objdump" }
 					}
@@ -38,7 +38,7 @@
     	{
 			"comment": "Секция SYMBOL TABLE:",
 			"begin": "^(SYMBOL TABLE):$",
-			"end": "(?=^\\s*[^\\d\\r\\n]+:$)",
+			"end": "(?=^\\s*[a-zA-Z].*:$)",
 			"beginCaptures": { "1": { "name": "markup.bold.section.objdump" } },
 			"patterns": [
 				{
@@ -57,8 +57,8 @@
 		},
 		{
 			"comment": "Сырое содержимое секций",
-			"begin":"^(Contents of section )([\\w.]*):$",
-			"end": "(?=^\\s*[^\\d\\r\\n]+:$)",
+			"begin":"^(Contents of section )([\\w.]+):$",
+			"end": "(?=^\\s*[a-zA-Z].*:$)",
 			"beginCaptures": {
 				"1": { "name": "markup.bold.section.objdump" },
 				"2": { "name": "entity.name.type.class.section.objdump" }
@@ -80,8 +80,8 @@
 		},
 		{
 			"comment": "Интерпретированное содержимое секций",
-			"begin":"^(Disassembly of section )([\\w.]*):$",
-			"end": "(?=^\\s*[^\\d\\r\\n]+:$)",
+			"begin":"^(Disassembly of section )([\\w.]+):$",
+			"end": "(?=^\\s*[a-zA-Z].*:$)",
 			"beginCaptures": {
 				"1": { "name": "markup.bold.section.objdump" },
 				"2": { "name": "entity.name.type.class.section.objdump" }
@@ -98,7 +98,7 @@
 					}
 				},
 				{
-					"comment": "Часть строки, содержащая адрес инструкции, код команды, мнемоническое имя (оставшаяся часть всех строк обрабатывается скопом ниже)",
+					"comment": "Часть строки, содержащая адрес инструкции, код команды, мнемоническое имя (оставшаяся часть всех строк обрабатывается скопом)",
 					"match": "^\\s*([a-fA-F0-9]+):\\s*([a-fA-F0-9]{4,8})\\s?([a-fA-F0-9]{4})?\\s*([\\w+.]*)\\s*",
 					"captures": {
 						"1": { "name": "constant.numeric.section.objdump" },
@@ -109,7 +109,7 @@
 				},
 				{
 					"comment": "Все регистры процессора",
-					"match": "(r[\\d]+|lr|pc|sp|psr)",
+					"match": "(r[\\d]+|lr|pc|sp|ip)",
 					"captures": {
 						"1": { "name": "variable.property.section.objdump" }
 					}
@@ -131,7 +131,7 @@
 				},
 				{
 					"comment": "Все числа",
-					"match": "(#-?\\d+|[a-fA-F0-9]+)",
+					"match": "(#-?\\d+|0x[a-fA-F0-9]+)",
 					"captures": {
 						"1": { "name": "constant.numeric.section.objdump" }
 					}
@@ -143,6 +143,13 @@
 						"1": { "name": "string.section.objdump" },
 						"2": { "name": "entity.name.function.section.objdump" },
 						"3": { "name": "string.section.objdump" }
+					}
+				},
+				{
+					"comment": "Все остальные слова (в основом - дополнительные действия над регистрами)",
+					"match": "(\\w+)",
+					"captures": {
+						"1": { "name": "keyword.control.section.objdump" }
 					}
 				}
 			]
